@@ -165,7 +165,14 @@ const MONTHS = [
     {k:"JUN", n:"June",      s:"Jun", gid:"190719224"},
     {k:"JUL", n:"July",      s:"Jul", gid:"1043810503"},
     {k:"AUG", n:"August",    s:"Aug", gid:"950228767"},
-    {k:"SEP", n:"September", s:"Sep", gid:"980775568"}
+    {k:"SEP", n:"September", s:"Sep", gid:"980775568"},
+    // October sheet ka gid yahan paste karein (published CSV link me "gid=XXXX" wala number). Khali rahe to October "(no data)" dikhega.
+    {k:"OCT", n:"October",   s:"Oct", gid:""}
+];
+const QUICK = [
+    {n:"Q1", ms:["APR","MAY","JUN"]},
+    {n:"Q2", ms:["JUL","AUG","SEP"]},
+    {n:"Apr-Sep", ms:["APR","MAY","JUN","JUL","AUG","SEP"]}
 ];
 const urlOf = m => BASE + m.gid + "&single=true&output=csv";
 const NOTE = "Note: Revenue is for reference purpose. This is MIS portal revenue, e-Lekha revenue is available at main dashboard.";
@@ -354,6 +361,7 @@ function parseSheet(aoa, ov){
 /* ============================ LOAD ============================ */
 async function loadAll(){
     await Promise.all(MONTHS.map(async m => {
+        if (!m.gid) { STATUS[m.k] = {ok:false, msg:"October sheet link (gid) abhi set nahi hai"}; return; }
         try {
             const res = await fetch(urlOf(m));
             if (!res.ok) throw new Error("HTTP " + res.status);
@@ -411,9 +419,16 @@ function setDefaultMonths(){
 }
 
 /* ============================ FILTER PANELS ============================ */
+function grpPick(tab, keys){
+    const set = ST[tab].months; set.clear();
+    keys.forEach(k => { if (HAS[k]) set.add(k); });
+    document.querySelectorAll(`#chips-${tab}-months input`).forEach(i => { i.checked = set.has(i.dataset.k); });
+    refresh(tab);
+}
 function chipBox(tab, key, label, items, inv){
     const s = ST[tab];
-    return `<div class="pc"><div class="lbl">${label} <a onclick="grpAll('${tab}','${key}',${inv},true)">All</a><span>·</span><a onclick="grpAll('${tab}','${key}',${inv},false)">None</a></div>
+    const quick = key === "months" ? QUICK.map(q => `<span>·</span><a onclick='grpPick("${tab}",${JSON.stringify(q.ms)})'>${q.n}</a>`).join("") : "";
+    return `<div class="pc"><div class="lbl">${label} <a onclick="grpAll('${tab}','${key}',${inv},true)">All</a><span>·</span><a onclick="grpAll('${tab}','${key}',${inv},false)">None</a>${quick}</div>
     <div class="chips" id="chips-${tab}-${key}">${items.map(i => {
         const chk = inv ? !s[key].has(i.k) : s[key].has(i.k);
         return `<label class="chip ${i.dis ? "dis" : ""}"><input type="checkbox" data-k="${esc(i.k)}" ${chk ? "checked" : ""} ${i.dis ? "disabled" : ""} onchange="onChip('${tab}','${key}',${inv},this)"><span>${esc(i.n)}</span></label>`;
@@ -559,6 +574,9 @@ function colVal(col, u){
 function cumLabel(ms){
     const idx = ms.map(k => MONTHS.findIndex(m => m.k === k));
     const contiguous = idx.every((v, i) => i === 0 || v === idx[i-1] + 1);
+    const sig = ms.join("-");
+    if (sig === "APR-MAY-JUN") return "Q1 Total (Apr-Jun)";
+    if (sig === "JUL-AUG-SEP") return "Q2 Total (Jul-Sep)";
     return contiguous ? `Cumulative (${mShort(ms[0])}-${mShort(ms[ms.length-1])})` : `Cumulative (${ms.map(mShort).join("+")})`;
 }
 function monthCols(s){
