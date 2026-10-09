@@ -1,0 +1,969 @@
+[index (96).html](https://github.com/user-attachments/files/33236544/index.96.html)
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARTICLE / REVENUE ANALYSIS PORTAL INDORE POSTAL REGION</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<meta name="theme-color" content="#31103f">
+<style>
+.report-header{background:linear-gradient(135deg,#2c0c38 0,#3f1251 100%);color:#fff}
+.ctrl-select{border:1px solid #cbd5e1;border-radius:.5rem;padding:.35rem .5rem;font-size:.75rem;background-color:#f8fafc;font-weight:600;outline:none;width:100%}
+.ctrl-select:focus{border-color:#581c87}
+.lbl{font-size:10px;font-weight:800;text-transform:uppercase;color:#3b0764;margin-bottom:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lbl a{font-size:10px;font-weight:700;color:#7e22ce;cursor:pointer;text-transform:none;text-decoration:underline}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid #cbd5e1;border-radius:9999px;padding:2px 9px;font-size:11px;font-weight:600;background:#f8fafc;cursor:pointer;user-select:none}
+.chip input{accent-color:#581c87;width:13px;height:13px}
+.chip:has(input:checked){background:#f3e8ff;border-color:#7e22ce;color:#3b0764}
+.chip.dis{opacity:.45;cursor:not-allowed}
+.lvbtn{border:1px solid #cbd5e1;background:#f8fafc;border-radius:.5rem;padding:4px 10px;font-size:11px;font-weight:700;color:#334155;cursor:pointer}
+.lvbtn.on{background:#581c87;color:#fff;border-color:#581c87}
+details.ms{position:relative}
+details.ms>summary{list-style:none;cursor:pointer}
+details.ms>summary::-webkit-details-marker{display:none}
+.ms-panel{position:absolute;z-index:45;left:0;top:100%;margin-top:3px;min-width:260px;max-width:92vw;max-height:260px;overflow:auto;background:#fff;border:1px solid #a78bfa;border-radius:.5rem;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px 8px}
+.ms-panel label{display:flex;gap:6px;align-items:center;font-size:11px;font-weight:600;padding:2px 0;cursor:pointer}
+.ms-panel input{accent-color:#581c87}
+.ms-actions{font-size:11px;font-weight:700;color:#7e22ce;padding-bottom:4px;border-bottom:1px solid #e9d5ff;margin-bottom:4px;position:sticky;top:-6px;background:#fff}
+.ms-actions a{cursor:pointer;text-decoration:underline}
+.data-wrap{max-height:72vh;overflow:auto;position:relative}
+.dt{border-collapse:separate;border-spacing:0;font-size:11px;text-align:center;min-width:100%}
+.dt th,.dt td{border-right:1px solid #9aa5b1;border-bottom:1px solid #9aa5b1;padding:3px 6px;white-space:nowrap}
+.dt th{background:#b8cce4;color:#000;font-weight:700;height:26px;box-sizing:border-box;border-top:1px solid #9aa5b1}
+.dt.live thead th{position:sticky;z-index:3}
+.dt.live thead tr:nth-child(1) th{top:0}
+.dt.live thead tr:nth-child(2) th{top:26px}
+.dt.live thead tr:nth-child(3) th{top:52px}
+.dt th:first-child,.dt td:first-child{border-left:1px solid #9aa5b1}
+.dt td.num{text-align:right;font-variant-numeric:tabular-nums}
+.dt td.left{text-align:left}
+.dt.live .stk{position:sticky;z-index:2;background:#fff}
+.dt.live thead .stk{z-index:6;background:#b8cce4}
+.dt tbody tr:hover>td{background:#ede9fe}
+.dt tbody tr:hover>td.stk{background:#ede9fe}
+.dt.live tfoot td{position:sticky;bottom:0;background:#bdd7ee;font-weight:800;z-index:4;border-top:2px solid #31103f}
+.dt:not(.live) tfoot td{background:#bdd7ee;font-weight:800}
+.dt.live tfoot td.stk{z-index:7}
+.dt td.pos{color:#15803d;font-weight:700}
+.dt td.neg{color:#b91c1c;font-weight:700}
+.dt tr.click{cursor:pointer}
+.dt tr.click td.first{text-decoration:underline}
+.pc{min-width:0}
+</style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between text-xs">
+
+<div id="initialLoader" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex flex-col items-center justify-center text-white transition-opacity duration-300">
+    <div class="w-12 h-12 border-4 border-purple-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+    <p class="text-sm font-bold tracking-wide">Fetching & Syncing Article / Revenue Data...</p>
+    <p class="text-[11px] text-purple-200 mt-1">Please wait a moment while monthly sheets are being processed</p>
+</div>
+
+<header class="report-header shadow-md py-3.5 px-4 md:px-8 border-b-2 border-purple-950">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div class="flex items-center gap-3">
+            <div class="bg-white p-1.5 rounded-xl shadow-sm flex items-center justify-center text-xl">📮</div>
+            <div>
+                <span class="text-[10px] font-bold tracking-widest text-purple-200 uppercase bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800">DEPARTMENT OF POSTS</span>
+                <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-white mt-0.5">ARTICLE / REVENUE ANALYSIS PORTAL INDORE POSTAL REGION</h1>
+                <p class="text-[11px] text-purple-200 mt-0.5 font-medium">SUB DIVISION WISE ARTICLE &amp; REVENUE ANALYSIS (PARCEL · IRGB · MO)</p>
+            </div>
+        </div>
+        <div class="flex items-center flex-wrap gap-2.5">
+            <span id="liveStatus" class="bg-emerald-600 text-white text-[11px] px-3 py-1 rounded-full font-bold shadow flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Connecting Sheets...
+            </span>
+            <button id="btnCheck" onclick="openCheck()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition cursor-pointer border border-slate-500 flex items-center gap-1"><span>🛠️</span> Data Check</button>
+            <button onclick="exportComplete()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition cursor-pointer border border-emerald-500 flex items-center gap-1"><span>📑</span> Complete Excel</button>
+        </div>
+    </div>
+</header>
+
+<nav class="bg-white border-b border-slate-200 shadow-sm py-2 px-4 md:px-8 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center gap-1.5">
+        <button onclick="switchTab('sum')" id="tabBtnSum" class="text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer"><span>📊</span> Summary</button>
+        <button onclick="switchTab('off')" id="tabBtnOff" class="text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer"><span>🔍</span> Detailed Office View</button>
+        <button onclick="switchTab('top')" id="tabBtnTop" class="text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer"><span>⭐</span> Top 20 / Bottom 20</button>
+        <button onclick="switchTab('cmp')" id="tabBtnCmp" class="text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer"><span>📈</span> Multi Month Compare</button>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-3 md:px-6 py-4 space-y-4 w-full flex-grow">
+    <div id="viewSum" class="space-y-3">
+        <div id="panel-sum" class="bg-white p-3 rounded-xl shadow-sm border border-slate-200"></div>
+        <div data-card="sum"></div>
+    </div>
+    <div id="viewOff" class="space-y-3 hidden">
+        <div id="panel-off" class="bg-white p-3 rounded-xl shadow-sm border border-slate-200"></div>
+        <div data-card="off"></div>
+    </div>
+    <div id="viewTop" class="space-y-3 hidden">
+        <div id="panel-top" class="bg-white p-3 rounded-xl shadow-sm border border-slate-200"></div>
+        <div data-card="top"></div>
+        <div data-card="bot"></div>
+    </div>
+    <div id="viewCmp" class="space-y-3 hidden">
+        <div id="panel-cmp" class="bg-white p-3 rounded-xl shadow-sm border border-slate-200"></div>
+        <div data-card="cmp"></div>
+    </div>
+</main>
+
+<!-- Drill-down modal (all offices of clicked row) -->
+<div id="drillModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-purple-300">
+        <div class="report-header px-4 py-3 flex justify-between items-center gap-2">
+            <div class="min-w-0">
+                <h3 id="ttl-modal" class="font-bold text-base truncate">Offices</h3>
+                <p id="info-modal" class="text-[11px] text-purple-200 truncate"></p>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap justify-end">
+                <button onclick="expX('modal')" class="bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📥 Excel</button>
+                <button onclick="expP('modal')" class="bg-rose-800 hover:bg-rose-900 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📄 PDF</button>
+                <button onclick="expJ('modal')" class="bg-indigo-700 hover:bg-indigo-800 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📸 JPEG</button>
+                <button onclick="closeModal('drillModal')" class="bg-purple-950 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+        </div>
+        <div class="p-2 overflow-auto flex-grow">
+            <div class="data-wrap" id="wrap-modal" style="max-height:none"></div>
+            <div id="more-modal"></div>
+            <div class="px-3 py-2 text-[11px] font-semibold text-slate-600 italic border-t border-slate-200 bg-slate-50">Note: Revenue is for reference purpose. This is MIS portal revenue, e-Lekha revenue is available at main dashboard.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Data check modal -->
+<div id="checkModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-purple-300">
+        <div class="report-header px-4 py-3 flex justify-between items-center">
+            <div>
+                <h3 class="font-bold text-base">🛠️ Data Check &amp; Column Mapping</h3>
+                <p class="text-[11px] text-purple-200">Har month ki sheet kaise padhi gayi — yahin verify karein</p>
+            </div>
+            <button onclick="closeModal('checkModal')" class="bg-purple-950 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold cursor-pointer">✕</button>
+        </div>
+        <div id="checkBody" class="p-3 overflow-auto flex-grow space-y-4"></div>
+    </div>
+</div>
+
+<footer class="report-header text-purple-200 text-[11px] py-3 px-4 text-center border-t border-purple-950 mt-8">
+    <p>Developed by <span class="text-white font-bold">Kapil Rajput, PA(RO), Regional Office Indore</span></p>
+</footer>
+
+<script>
+/* ============================ CONFIG ============================ */
+const PORTAL = "ARTICLE / REVENUE ANALYSIS PORTAL - INDORE POSTAL REGION";
+const REGION = "INDORE REGION";
+const BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=";
+const MONTHS = [
+    {k:"APR", n:"April",     s:"Apr", gid:"1368682164"},
+    {k:"MAY", n:"May",       s:"May", gid:"2017146919"},
+    {k:"JUN", n:"June",      s:"Jun", gid:"190719224"},
+    {k:"JUL", n:"July",      s:"Jul", gid:"1043810503"},
+    {k:"AUG", n:"August",    s:"Aug", gid:"950228767"},
+    {k:"SEP", n:"September", s:"Sep", gid:"980775568"}
+];
+const urlOf = m => BASE + m.gid + "&single=true&output=csv";
+const NOTE = "Note: Revenue is for reference purpose. This is MIS portal revenue, e-Lekha revenue is available at main dashboard.";
+const VERTS = [
+    {k:"P", n:"Parcel", full:"Parcel"},
+    {k:"I", n:"IRGB",   full:"IRGB"},
+    {k:"M", n:"MO",     full:"MO (MO + Speed Post + Other)"}
+];
+const METRICS = [{k:"a", n:"Article"}, {k:"r", n:"Revenue"}];
+const VI = {P:0, I:1, M:2};
+const VCOL = {P:"#c6efce", I:"#fff2cc", M:"#fce4d6", T:"#e1d5e7"};
+const DIV_COLORS = {
+    "INDORE CITY":["#f2dcdb","#800000"], "KHANDWA":["#f2dcdb","#800000"], "INDORE MFL":["#dce6f1","#1f497d"],
+    "MANDSAUR":["#e2efda","#375623"], "RATLAM":["#e1d5e7","#595959"], "SEHORE":["#d9edf7","#31708f"],
+    "UJJAIN":["#d9d9d9","#333333"], "ID DIVISION":["#fff2cc","#7f6000"]
+};
+const LEVELS = {
+    sum:[{k:"division",n:"Division View"},{k:"sd",n:"Sub Division View"},{k:"region",n:"Region View"}],
+    top:[{k:"office",n:"Office"},{k:"sd",n:"Sub Division"},{k:"division",n:"Division"}],
+    cmp:[{k:"office",n:"Office"},{k:"sd",n:"Sub Division"},{k:"division",n:"Division"},{k:"region",n:"Region"}]
+};
+
+/* ============================ STATE ============================ */
+let RAW = {}, PARSED = {}, STATUS = {}, HAS = {}, OVERRIDE = {};
+let OFFICES = {}, OFFICE_LIST = [], ALL_DIVS = [], ALL_SDS = [], CLASSES = [], HAS_CLASS = false;
+const CUR = {};      // current model per table key
+const LIM = {};      // rows rendered per table key
+const newSt = extra => Object.assign({months:new Set(), verts:new Set(["P","I","M"]), metrics:new Set(["a","r"]), exDiv:new Set(), exSd:new Set(), exCls:new Set(), q:""}, extra);
+const ST = {
+    sum:newSt({level:"division"}),
+    off:newSt({sortV:"T", sortM:"r", dir:"desc"}),
+    top:newSt({level:"office", rankV:"T", rankM:"r", n:20, incZero:false}),
+    cmp:newSt({level:"office", split:false})
+};
+let activeTab = "sum";
+
+/* ============================ UTILS ============================ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num = v => { if (typeof v === "number") return isFinite(v) ? v : 0; const n = parseFloat(String(v).replace(/[,₹\s]/g, "")); return isFinite(n) ? n : 0; };
+const fmtA = n => Math.round(n).toLocaleString("en-IN");
+const fmtR = n => n.toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2});
+const mShort = k => MONTHS.find(m => m.k === k).s;
+const mName  = k => MONTHS.find(m => m.k === k).n;
+const vName  = k => k === "T" ? "Total" : VERTS[VI[k]].n;
+const colLetter = n => { let s = ""; n++; while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; };
+const hex2rgb = h => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+const newAgg = () => { const a = {}; MONTHS.forEach(m => a[m.k] = [0,0,0,0,0,0]); return a; };
+
+/* ============================ SHEET PARSER ============================ */
+const CAT_RE = /PARCEL|IRGB|\bMO\b|OTHER|SPEED ?-?POST|\bSP\b/i;
+
+function classifyCol(L){
+    if (/TOTAL|GRAND/.test(L)) return null;
+    let cat = null;
+    if (/IRGB/.test(L)) cat = "i";
+    else if (/SPEED ?-?POST|\bSP\b/.test(L)) cat = "s";
+    else if (/PARCEL|PARSEL/.test(L)) cat = "p";
+    else if (/\bMO\b|MONEY ?ORDER|M\.O/.test(L)) cat = "m";
+    else if (/OTHER/.test(L)) cat = "o";
+    let me = null;
+    if (/REV|AMOUNT|AMT|VALUE|EARN|INCOME|₹|\bRS\b/.test(L)) me = "r";
+    else if (/ARTICLE|\bART\b|COUNT|QTY|QUANTITY|NUMBER|\bNOS?\b|BOOKED|VOLUME|ITEM/.test(L)) me = "a";
+    return {cat, me};
+}
+
+function detectFields(labels){
+    const f = {}; let sdExact = false;
+    labels.forEach((L, c) => {
+        if (!L) return;
+        if (/^S\.?\s?D\.?(\s?(NAME|OFFICE|NO))?$/.test(L)) { if (!sdExact){ f.sd = c; sdExact = true; } return; }
+        if (f.officeId === undefined && /OFFICE.*(\bID\b|CODE)|FACILITY.*(\bID\b|CODE)|^ID$/.test(L)) { f.officeId = c; return; }
+        if (/SUB ?-?DIV/.test(L)) { if (f.sd === undefined && !sdExact) f.sd = c; return; }
+        if (/DIVISION|^DIV$/.test(L)) { if (f.div === undefined) f.div = c; return; }
+        if (/OFFICE.*NAME|NAME.*OFFICE|FACILITY.*NAME|^NAME$|^OFFICE$/.test(L)) { if (f.name === undefined) f.name = c; return; }
+        if (/CLASS|OFFICE ?TYPE|TYPE OF OFFICE/.test(L)) { if (f.cls === undefined) f.cls = c; return; }
+        if (/CATEGORY|PRODUCT|VERTICAL|SERVICE|^TYPE$/.test(L)) { if (f.catCol === undefined) f.catCol = c; return; }
+    });
+    return f;
+}
+
+function buildLabels(aoa, bs, be){
+    let width = 0;
+    for (let r = bs; r <= be; r++) width = Math.max(width, (aoa[r] || []).length);
+    const parts = Array.from({length:width}, () => []);
+    for (let r = bs; r <= be; r++){
+        const row = aoa[r] || []; let fill = null;
+        for (let c = 0; c < width; c++){
+            const v = String(row[c] == null ? "" : row[c]).trim();
+            if (v){ fill = CAT_RE.test(v) ? v : null; parts[c].push(v); }
+            else if (fill && r < be){ parts[c].push(fill); }
+        }
+    }
+    return parts.map(p => p.join(" ").toUpperCase().replace(/\s+/g, " ").trim());
+}
+
+const ID_FIELDS = ["officeId","name","cls","div","sd"];
+const MET_FIELDS = ["pa","pr","ia","ir","ma","mr","oa","or","sa","sr"];
+
+function parseSheet(aoa, ov){
+    ov = ov || {};
+    const res = {ok:false, msg:"", recs:new Map(), info:{}};
+    if (!aoa || !aoa.length){ res.msg = "Sheet khali mili"; return res; }
+    let hs = -1;
+    for (let r = 0; r < Math.min(aoa.length, 25); r++){
+        if ((aoa[r] || []).some(v => /OFFICE\s*(ID|CODE|NAME)|FACILITY/i.test(String(v)))){ hs = r; break; }
+    }
+    if (hs < 0) for (let r = 0; r < Math.min(aoa.length, 25); r++){
+        if ((aoa[r] || []).some(v => /DIVISION/i.test(String(v)))){ hs = r; break; }
+    }
+    if (hs < 0){ res.msg = "Header row (Office ID) nahi mili"; return res; }
+    let bs = hs;
+    for (let r = hs - 1; r >= Math.max(0, hs - 3); r--){
+        const cnt = (aoa[r] || []).filter(v => CAT_RE.test(String(v))).length;
+        if (cnt >= 2) bs = r;
+    }
+    let labels = buildLabels(aoa, bs, hs);
+    let f = detectFields(labels);
+    if (ov.officeId !== undefined) f.officeId = ov.officeId >= 0 ? ov.officeId : undefined;
+    if (f.officeId === undefined){ res.msg = "Office ID column nahi mila"; res.info = {labels}; return res; }
+    let ds = -1;
+    for (let r = hs + 1; r < aoa.length; r++){
+        const row = aoa[r] || [];
+        const idv = String(row[f.officeId] == null ? "" : row[f.officeId]).trim();
+        if (!idv || /OFFICE|\bID\b|NAME|ARTICLE|REVENUE|PARCEL|IRGB/i.test(idv)) continue;
+        if (row.filter(v => typeof v === "number").length >= 2){ ds = r; break; }
+    }
+    if (ds < 0){ res.msg = "Data rows nahi mili"; res.info = {labels}; return res; }
+    labels = buildLabels(aoa, bs, ds - 1);
+    f = detectFields(labels);
+    ID_FIELDS.forEach(k => { if (ov[k] !== undefined) f[k] = ov[k] >= 0 ? ov[k] : undefined; });
+    if (f.officeId === undefined){ res.msg = "Office ID column nahi mila"; res.info = {labels}; return res; }
+
+    const M = {}; MET_FIELDS.forEach(k => M[k] = []);
+    const G = {a:[], r:[]}, unk = {};
+    const idCols = new Set(Object.values(f).filter(v => v !== undefined));
+    labels.forEach((L, c) => {
+        if (!L || idCols.has(c)) return;
+        const cl = classifyCol(L); if (!cl) return;
+        if (cl.cat){ if (cl.me) M[cl.cat + cl.me].push(c); else (unk[cl.cat] = unk[cl.cat] || []).push(c); }
+        else if (cl.me) G[cl.me].push(c);
+    });
+    Object.keys(unk).forEach(cat => {
+        if (!M[cat + "a"].length && !M[cat + "r"].length && unk[cat].length === 2){ M[cat + "a"] = [unk[cat][0]]; M[cat + "r"] = [unk[cat][1]]; }
+    });
+    let ovMet = false;
+    MET_FIELDS.forEach(k => { if (ov[k] !== undefined){ M[k] = ov[k] >= 0 ? [ov[k]] : []; ovMet = true; } });
+    const wide = MET_FIELDS.some(k => M[k].length);
+    let format = "wide";
+    if (!wide){
+        if (f.catCol !== undefined && G.a.length && G.r.length) format = "long";
+        else { res.msg = "Parcel/IRGB/MO ke Article-Revenue columns nahi mile"; res.info = {labels, f}; return res; }
+    }
+
+    const out = new Map(); let unknownCat = 0, skipped = 0;
+    const S = (row, arr) => arr.reduce((t, c) => t + num(row[c]), 0);
+    for (let r = ds; r < aoa.length; r++){
+        const row = aoa[r] || [];
+        const id = String(row[f.officeId] == null ? "" : row[f.officeId]).trim().replace(/\.0+$/, "");
+        if (!id) continue;
+        const g = k => f[k] !== undefined ? String(row[f[k]] == null ? "" : row[f[k]]).trim() : "";
+        const nm = g("name");
+        if (/TOTAL|SUMMARY/i.test(id + " " + nm)){ skipped++; continue; }
+        let rec = out.get(id);
+        if (!rec){
+            rec = {id, name:nm, cls:g("cls").toUpperCase(), div:(g("div") || "UNKNOWN DIVISION").toUpperCase(), sd:(g("sd") || "UNKNOWN SUB DIVISION").toUpperCase(), vec:[0,0,0,0,0,0]};
+            out.set(id, rec);
+        }
+        if (format === "wide"){
+            rec.vec[0] += S(row, M.pa); rec.vec[1] += S(row, M.pr);
+            rec.vec[2] += S(row, M.ia); rec.vec[3] += S(row, M.ir);
+            rec.vec[4] += S(row, M.ma) + S(row, M.oa) + S(row, M.sa); rec.vec[5] += S(row, M.mr) + S(row, M.or) + S(row, M.sr);
+        } else {
+            const cv = String(row[f.catCol] == null ? "" : row[f.catCol]).toUpperCase();
+            const ci = /IRGB/.test(cv) ? 1 : /SPEED ?-?POST|\bSP\b/.test(cv) ? 2 : /PARCEL/.test(cv) ? 0 : /\bMO\b|MONEY|OTHER/.test(cv) ? 2 : -1;
+            if (ci < 0){ unknownCat++; continue; }
+            rec.vec[ci*2] += num(row[G.a[0]]); rec.vec[ci*2+1] += num(row[G.r[0]]);
+        }
+    }
+    res.ok = out.size > 0; res.recs = out;
+    if (!res.ok) res.msg = "Koi office row nahi mili";
+    res.info = {hs, bs, ds, labels, f, M, G, format, unknownCat, skipped};
+    return res;
+}
+
+/* ============================ LOAD ============================ */
+async function loadAll(){
+    await Promise.all(MONTHS.map(async m => {
+        try {
+            const res = await fetch(urlOf(m));
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const txt = await res.text();
+            const wb = XLSX.read(txt, {type:"string"});
+            RAW[m.k] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:"", raw:true});
+        } catch (e) { STATUS[m.k] = {ok:false, msg:"Fetch error: " + (e.message || e)}; }
+    }));
+    buildOffices();
+}
+
+function buildOffices(){
+    OFFICES = {}; HAS = {};
+    MONTHS.forEach(m => {
+        HAS[m.k] = false;
+        if (!RAW[m.k]) return;
+        const p = parseSheet(RAW[m.k], OVERRIDE);
+        PARSED[m.k] = p;
+        STATUS[m.k] = {ok:p.ok, msg:p.msg, rows:p.recs.size, info:p.info};
+        if (!p.ok) return;
+        HAS[m.k] = true;
+        p.recs.forEach(rc => {
+            const o = OFFICES[rc.id] || (OFFICES[rc.id] = {id:rc.id, name:"", cls:"", div:"", sd:"", m:{}});
+            if (rc.name) o.name = rc.name;
+            if (rc.cls) o.cls = rc.cls;
+            if (!/^UNKNOWN/.test(rc.sd) || !o.sd) o.sd = rc.sd;
+            if (!/^UNKNOWN/.test(rc.div) || !o.div) o.div = rc.div;
+            o.m[m.k] = rc.vec;
+        });
+    });
+    OFFICE_LIST = Object.values(OFFICES);
+    // Mapping: Office ID -> SD (from sheet's SD column) -> Division (each SD belongs to exactly one Division)
+    const votes = {};
+    OFFICE_LIST.forEach(o => {
+        if (/^UNKNOWN/.test(o.sd) || /^UNKNOWN/.test(o.div)) return;
+        const v = votes[o.sd] || (votes[o.sd] = {}); v[o.div] = (v[o.div] || 0) + 1;
+    });
+    const sdDiv = {};
+    Object.keys(votes).forEach(sd => { sdDiv[sd] = Object.entries(votes[sd]).sort((a, b) => b[1] - a[1])[0][0]; });
+    OFFICE_LIST.forEach(o => { if (sdDiv[o.sd]) o.div = sdDiv[o.sd]; });
+    ALL_DIVS = [...new Set(OFFICE_LIST.map(o => o.div))].sort();
+    const sdMap = new Map();
+    OFFICE_LIST.forEach(o => { const key = o.div + "||" + o.sd; if (!sdMap.has(key)) sdMap.set(key, {key, div:o.div, sd:o.sd}); });
+    ALL_SDS = [...sdMap.values()].sort((a, b) => (a.div + a.sd).localeCompare(b.div + b.sd));
+    CLASSES = [...new Set(OFFICE_LIST.map(o => o.cls).filter(Boolean))].sort();
+    HAS_CLASS = CLASSES.length > 0;
+}
+
+function setDefaultMonths(){
+    const av = MONTHS.filter(m => HAS[m.k]).map(m => m.k);
+    ST.sum.months = new Set(av);
+    ST.off.months = new Set(av.slice(-1));
+    ST.top.months = new Set(av.slice(-1));
+    ST.cmp.months = new Set(av.slice(-3));
+}
+
+/* ============================ FILTER PANELS ============================ */
+function chipBox(tab, key, label, items, inv){
+    const s = ST[tab];
+    return `<div class="pc"><div class="lbl">${label} <a onclick="grpAll('${tab}','${key}',${inv},true)">All</a><span>·</span><a onclick="grpAll('${tab}','${key}',${inv},false)">None</a></div>
+    <div class="chips" id="chips-${tab}-${key}">${items.map(i => {
+        const chk = inv ? !s[key].has(i.k) : s[key].has(i.k);
+        return `<label class="chip ${i.dis ? "dis" : ""}"><input type="checkbox" data-k="${esc(i.k)}" ${chk ? "checked" : ""} ${i.dis ? "disabled" : ""} onchange="onChip('${tab}','${key}',${inv},this)"><span>${esc(i.n)}</span></label>`;
+    }).join("")}</div></div>`;
+}
+function msHTML(tab, kind){
+    return `<details class="ms" id="ms-${tab}-${kind}"><summary class="ctrl-select" id="mssum-${tab}-${kind}"></summary>
+    <div class="ms-panel"><div class="ms-actions"><a onclick="msAll('${tab}','${kind}',true)">Select All</a> · <a onclick="msAll('${tab}','${kind}',false)">Clear</a></div><div id="mslist-${tab}-${kind}"></div></div></details>`;
+}
+function selHTML(tab, key, label, opts){
+    return `<div class="pc"><div class="lbl">${label}</div><select class="ctrl-select" onchange="onSel('${tab}','${key}',this.value)">${opts.map(o => `<option value="${o.k}" ${String(ST[tab][key]) === String(o.k) ? "selected" : ""}>${o.n}</option>`).join("")}</select></div>`;
+}
+function buildPanel(tab){
+    const s = ST[tab];
+    let h = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">';
+    if (s.level !== undefined){
+        h += `<div class="pc"><div class="lbl">🔎 View Level</div><div class="flex flex-wrap gap-1.5">${LEVELS[tab].map(l => `<button id="lv-${tab}-${l.k}" onclick="setLevel('${tab}','${l.k}')" class="lvbtn ${s.level === l.k ? "on" : ""}">${l.n}</button>`).join("")}</div></div>`;
+    }
+    h += chipBox(tab, "months", "📅 Month", MONTHS.map(m => ({k:m.k, n:m.n + (HAS[m.k] ? "" : " (no data)"), dis:!HAS[m.k]})), false);
+    h += chipBox(tab, "verts", "🧭 Vertical", VERTS.map(v => ({k:v.k, n:v.full})), false);
+    h += chipBox(tab, "metrics", "📊 Show", METRICS.map(m => ({k:m.k, n:m.n})), false);
+    if (CLASSES.length > 1) h += chipBox(tab, "exCls", "🏷️ Class", CLASSES.map(c => ({k:c, n:c})), true);
+    h += `<div class="pc"><div class="lbl">🏛️ Division</div>${msHTML(tab, "div")}</div>`;
+    h += `<div class="pc"><div class="lbl">🏢 Sub Division</div>${msHTML(tab, "sd")}</div>`;
+    const vOpts = [...VERTS.map(v => ({k:v.k, n:v.n})), {k:"T", n:"Total"}];
+    const mOpts = [{k:"r", n:"Revenue"}, {k:"a", n:"Article"}];
+    if (tab === "off"){
+        h += selHTML(tab, "sortV", "↕️ Sort Metric", vOpts);
+        h += selHTML(tab, "sortM", "↕️ Sort On", mOpts);
+        h += selHTML(tab, "dir", "⬍ Sort Direction", [{k:"desc", n:"Highest to Lowest"}, {k:"asc", n:"Lowest to Highest"}]);
+    }
+    if (tab === "top"){
+        h += selHTML(tab, "rankV", "🏅 Rank By", vOpts);
+        h += selHTML(tab, "rankM", "🏅 Rank On", mOpts);
+        h += selHTML(tab, "n", "🔢 How Many", [5,10,15,20,25,30,50].map(n => ({k:n, n:"Top / Bottom " + n})));
+        h += `<div class="pc"><div class="lbl">⚙️ Option</div><label class="chip"><input type="checkbox" ${s.incZero ? "checked" : ""} onchange="ST.top.incZero=this.checked;refresh('top')"><span>Zero wale offices bhi Bottom me gine</span></label></div>`;
+    }
+    if (tab === "cmp"){
+        h += `<div class="pc"><div class="lbl">⚙️ Option</div><label class="chip"><input type="checkbox" ${s.split ? "checked" : ""} onchange="ST.cmp.split=this.checked;refresh('cmp')"><span>Vertical-wise alag columns dikhao</span></label></div>`;
+    }
+    if (tab === "off" || tab === "cmp"){
+        h += `<div class="pc"><div class="lbl">🔍 Search Office</div><input type="text" class="ctrl-select" placeholder="Office name / ID" oninput="onQ('${tab}',this.value)"></div>`;
+    }
+    h += "</div>";
+    $("panel-" + tab).innerHTML = h;
+    fillMs(tab, "div"); fillMs(tab, "sd");
+}
+function visibleSds(s){ return ALL_SDS.filter(x => !s.exDiv.has(x.div)); }
+function msItems(tab, kind){
+    const s = ST[tab];
+    return kind === "div" ? ALL_DIVS.map(d => ({k:d, n:d})) : visibleSds(s).map(x => ({k:x.key, n:x.sd + " (" + x.div + ")"}));
+}
+function sumMs(tab, kind){
+    const items = msItems(tab, kind), ex = kind === "div" ? ST[tab].exDiv : ST[tab].exSd;
+    const sel = items.filter(i => !ex.has(i.k)).length, nm = kind === "div" ? "Divisions" : "Sub Divisions";
+    $("mssum-" + tab + "-" + kind).textContent = sel === items.length ? `All ${nm} (${items.length})` : `${sel} of ${items.length} ${nm} selected`;
+}
+function fillMs(tab, kind){
+    const ex = kind === "div" ? ST[tab].exDiv : ST[tab].exSd;
+    $("mslist-" + tab + "-" + kind).innerHTML = msItems(tab, kind).map(i => `<label><input type="checkbox" data-k="${esc(i.k)}" ${ex.has(i.k) ? "" : "checked"} onchange="onMs('${tab}','${kind}',this)"><span>${esc(i.n)}</span></label>`).join("");
+    sumMs(tab, kind);
+}
+function onChip(tab, key, inv, el){
+    const set = ST[tab][key], k = el.dataset.k;
+    if (inv) el.checked ? set.delete(k) : set.add(k); else el.checked ? set.add(k) : set.delete(k);
+    refresh(tab);
+}
+function grpAll(tab, key, inv, val){
+    const set = ST[tab][key];
+    document.querySelectorAll(`#chips-${tab}-${key} input`).forEach(i => {
+        if (i.disabled) return;
+        i.checked = val;
+        const k = i.dataset.k;
+        if (inv) val ? set.delete(k) : set.add(k); else val ? set.add(k) : set.delete(k);
+    });
+    refresh(tab);
+}
+function onMs(tab, kind, el){
+    const ex = kind === "div" ? ST[tab].exDiv : ST[tab].exSd, k = el.dataset.k;
+    el.checked ? ex.delete(k) : ex.add(k);
+    sumMs(tab, kind);
+    if (kind === "div"){ fillMs(tab, "sd"); }
+    refresh(tab);
+}
+function msAll(tab, kind, val){
+    const s = ST[tab];
+    if (kind === "div"){ s.exDiv.clear(); if (!val) ALL_DIVS.forEach(d => s.exDiv.add(d)); }
+    else visibleSds(s).forEach(x => val ? s.exSd.delete(x.key) : s.exSd.add(x.key));
+    fillMs(tab, "div"); fillMs(tab, "sd"); refresh(tab);
+}
+function onSel(tab, key, val){ ST[tab][key] = key === "n" ? +val : val; refresh(tab); }
+let qTimer = null;
+function onQ(tab, val){ clearTimeout(qTimer); qTimer = setTimeout(() => { ST[tab].q = val.toLowerCase().trim(); refresh(tab); }, 250); }
+function setLevel(tab, lv){
+    ST[tab].level = lv;
+    LEVELS[tab].forEach(l => { const b = $(`lv-${tab}-${l.k}`); if (b) b.classList.toggle("on", l.k === lv); });
+    refresh(tab);
+}
+document.addEventListener("click", e => {
+    document.querySelectorAll("details.ms[open]").forEach(d => { if (!d.contains(e.target)) d.removeAttribute("open"); });
+});
+
+/* ============================ DATA PIPELINE ============================ */
+const verts = s => VERTS.filter(v => s.verts.has(v.k)).map(v => v.k);
+const mets  = s => METRICS.filter(x => s.metrics.has(x.k)).map(x => x.k);
+const mons  = s => MONTHS.filter(m => s.months.has(m.k) && HAS[m.k]).map(m => m.k);
+
+function passOffices(s){
+    return OFFICE_LIST.filter(o => !s.exDiv.has(o.div) && !s.exSd.has(o.div + "||" + o.sd) && !s.exCls.has(o.cls) &&
+        (!s.q || (o.id + " " + o.name).toLowerCase().includes(s.q)));
+}
+function makeUnits(offs, level){
+    const map = new Map();
+    for (const o of offs){
+        const key = level === "office" ? o.id : level === "sd" ? o.div + "||" + o.sd : level === "division" ? o.div : "R";
+        let u = map.get(key);
+        if (!u){ u = {key, div:level === "region" ? "" : o.div, sd:level === "sd" ? o.sd : "", o:level === "office" ? o : null, offs:[], agg:newAgg()}; map.set(key, u); }
+        u.offs.push(o);
+        for (const k in o.m){ const a = u.agg[k], b = o.m[k]; for (let i = 0; i < 6; i++) a[i] += b[i]; }
+    }
+    return [...map.values()];
+}
+function totalUnit(units){
+    const t = {key:"TOTAL", div:"", sd:"", o:null, offs:[], agg:newAgg()};
+    for (const u of units){
+        t.offs = t.offs.concat(u.offs);
+        for (const k in u.agg){ const a = t.agg[k], b = u.agg[k]; for (let i = 0; i < 6; i++) a[i] += b[i]; }
+    }
+    return t;
+}
+function sumVal(u, months, vs, metric){
+    let t = 0; const mi = metric === "r" ? 1 : 0;
+    for (const k of months){ const a = u.agg[k]; if (!a) continue; for (const v of vs) t += a[VI[v] * 2 + mi]; }
+    return t;
+}
+function colVal(col, u){
+    if (col.kind === "val") return sumVal(u, col.months, col.verts, col.metric);
+    const f = sumVal(u, [col.a], col.verts, col.metric), l = sumVal(u, [col.b], col.verts, col.metric);
+    if (col.kind === "diff") return l - f;
+    if (f === 0) return l === 0 ? 0 : null;
+    return (l - f) / f * 100;
+}
+function cumLabel(ms){
+    const idx = ms.map(k => MONTHS.findIndex(m => m.k === k));
+    const contiguous = idx.every((v, i) => i === 0 || v === idx[i-1] + 1);
+    return contiguous ? `Cumulative (${mShort(ms[0])}-${mShort(ms[ms.length-1])})` : `Cumulative (${ms.map(mShort).join("+")})`;
+}
+function monthCols(s){
+    const ms = mons(s), vs = verts(s), mt = mets(s);
+    if (!ms.length || !vs.length || !mt.length) return [];
+    const groups = ms.map(k => ({label:mName(k), months:[k], c:"#b8cce4"}));
+    if (ms.length > 1) groups.push({label:cumLabel(ms), months:ms, c:"#d9c9f0"});
+    const vl = vs.length > 1 ? [...vs, "T"] : vs;
+    const cols = [];
+    for (const g of groups) for (const v of vl) for (const m of mt){
+        cols.push({kind:"val", path:[g.label, vName(v), m === "a" ? "Article" : "Revenue"], months:g.months, verts:v === "T" ? vs : [v], metric:m, hc:[g.c, VCOL[v], VCOL[v]]});
+    }
+    return cols;
+}
+function cmpCols(s){
+    const ms = mons(s), vs = verts(s), mt = mets(s);
+    if (ms.length < 2 || !vs.length || !mt.length) return [];
+    const vl = s.split && vs.length > 1 ? [...vs, "T"] : ["T"];
+    const vLab = v => v === "T" ? (vs.length === 1 ? vName(vs[0]) : "Total") : vName(v);
+    const cols = [];
+    for (const m of mt){
+        const mn = m === "a" ? "Article" : "Revenue", c0 = m === "a" ? "#c9daf8" : "#d9ead3";
+        const groups = [...ms.map(k => ({label:mName(k), months:[k], c:"#b8cce4"})), {label:cumLabel(ms), months:ms, c:"#d9c9f0"}];
+        for (const g of groups) for (const v of vl)
+            cols.push({kind:"val", path:[mn, g.label, vLab(v)], months:g.months, verts:v === "T" ? vs : [v], metric:m, hc:[c0, g.c, VCOL[v]]});
+        const f = ms[0], l = ms[ms.length-1], lab = `Change (${mShort(f)} to ${mShort(l)})`;
+        cols.push({kind:"diff", path:[mn, lab, "Difference"], metric:m, verts:vs, a:f, b:l, hc:[c0, "#fde4d0", "#fde4d0"]});
+        cols.push({kind:"pct",  path:[mn, lab, "% Change"],   metric:m, verts:vs, a:f, b:l, hc:[c0, "#fde4d0", "#fde4d0"]});
+    }
+    return cols;
+}
+function labelCols(level){
+    const cnt = {h:"Offices", w:60, n:1, get:u => u.offs.length};
+    if (level === "office") return [
+        {h:"Office Name", w:190, left:1, get:u => u.o.name || u.o.id},
+        {h:"Office ID", w:80, get:u => u.o.id},
+        ...(HAS_CLASS ? [{h:"Class", w:50, get:u => u.o.cls}] : []),
+        {h:"Division", w:100, dv:1, get:u => u.o.div},
+        {h:"Sub Division", w:150, left:1, get:u => u.o.sd}
+    ];
+    if (level === "sd") return [{h:"Sub Division", w:170, left:1, get:u => u.sd}, {h:"Division", w:100, dv:1, get:u => u.div}, cnt];
+    if (level === "division") return [{h:"Division", w:150, left:1, dv:1, get:u => u.div}, cnt];
+    return [{h:"Region", w:150, left:1, get:() => REGION}, cnt];
+}
+function levelName(l){ return {office:"Office", sd:"Sub Division", division:"Division", region:"Region"}[l]; }
+function unitLabel(u, level){ return level === "sd" ? `${u.sd} (${u.div})` : level === "division" ? u.div : level === "region" ? REGION : (u.o ? u.o.name : ""); }
+function filterDesc(s){
+    const ms = mons(s).map(mShort).join(", ") || "-";
+    const vs = verts(s).map(vName).join(", ") || "-";
+    const mt = mets(s).map(k => k === "a" ? "Article" : "Revenue").join(" + ") || "-";
+    const dv = ALL_DIVS.filter(d => !s.exDiv.has(d));
+    const dtxt = dv.length === ALL_DIVS.length ? "All Divisions" : dv.join(", ") || "No Division";
+    const sds = visibleSds(s), sdSel = sds.filter(x => !s.exSd.has(x.key));
+    const stxt = sdSel.length === sds.length ? "All Sub Divisions" : sdSel.length + " Sub Divisions";
+    const cl = CLASSES.length > 1 ? CLASSES.filter(c => !s.exCls.has(c)).join("/") : "";
+    return `Months: ${ms} | Vertical: ${vs} | Show: ${mt} | ${dtxt} | ${stxt}` + (cl ? ` | Class: ${cl}` : "");
+}
+function rankVal(s, u, ms, vs, rv, rm){ return sumVal(u, ms, rv === "T" ? vs : [rv], rm); }
+function mk(key, title, s, level, cols, units, extraSub){
+    return {key, title, sub:filterDesc(s) + (extraSub ? " | " + extraSub : ""), level, lc:labelCols(level), cols, rows:units, total:totalUnit(units)};
+}
+
+/* ---- model builders (no DOM side-effects) ---- */
+function buildSumModel(level){
+    const s = ST.sum, units = makeUnits(passOffices(s), level);
+    units.sort((a, b) => (a.div + a.sd).localeCompare(b.div + b.sd));
+    const m = mk("sum", `Summary - ${{division:"Division View", sd:"Sub Division View", region:"Region View"}[level]}`, s, level, monthCols(s), units);
+    m.clickable = true; return m;
+}
+function buildOffModel(){
+    const s = ST.off, ms = mons(s), vs = verts(s);
+    const units = makeUnits(passOffices(s), "office");
+    const key = new Map(units.map(u => [u, rankVal(s, u, ms, vs, s.sortV, s.sortM)]));
+    const d = s.dir === "desc" ? -1 : 1;
+    units.sort((a, b) => (key.get(a) - key.get(b)) * d || (a.o.name || "").localeCompare(b.o.name || ""));
+    const sortTxt = `Sort: ${vName(s.sortV)} ${s.sortM === "r" ? "Revenue" : "Article"} (${s.dir === "desc" ? "Highest to Lowest" : "Lowest to Highest"})`;
+    return mk("off", "Detailed Office View", s, "office", monthCols(s), units, sortTxt);
+}
+function buildTopModels(){
+    const s = ST.top, ms = mons(s), vs = verts(s), n = s.n;
+    const units = makeUnits(passOffices(s), s.level);
+    const val = new Map(units.map(u => [u, rankVal(s, u, ms, vs, s.rankV, s.rankM)]));
+    const nm = (a, b) => unitLabel(a, s.level).localeCompare(unitLabel(b, s.level));
+    const desc = [...units].sort((a, b) => (val.get(b) - val.get(a)) || nm(a, b));
+    let asc = [...units].sort((a, b) => (val.get(a) - val.get(b)) || nm(a, b));
+    if (!s.incZero) asc = asc.filter(u => val.get(u) > 0);
+    const cols = monthCols(s), rk = `Rank by: ${vName(s.rankV)} ${s.rankM === "r" ? "Revenue" : "Article"}`;
+    return {
+        top:mk("top", `Top ${n} ${levelName(s.level)}s`, s, s.level, cols, desc.slice(0, n), rk),
+        bot:mk("bot", `Bottom ${n} ${levelName(s.level)}s`, s, s.level, cols, asc.slice(0, n), rk + (s.incZero ? " (zero included)" : " (zero excluded)"))
+    };
+}
+function buildCmpModel(){
+    const s = ST.cmp, units = makeUnits(passOffices(s), s.level);
+    units.sort((a, b) => (a.div + a.sd + (a.o ? a.o.name : "")).localeCompare(b.div + b.sd + (b.o ? b.o.name : "")));
+    return mk("cmp", `Multi Month Compare - ${levelName(s.level)} wise`, s, s.level, cmpCols(s), units);
+}
+
+/* ============================ TABLE RENDER ============================ */
+function headRuns(cols, d){
+    const runs = []; let prev = null;
+    cols.forEach(c => {
+        const key = c.path.slice(0, d + 1).join("\u0001");
+        if (prev === key) runs[runs.length - 1].span++;
+        else { runs.push({text:c.path[d], span:1, color:c.hc[d]}); prev = key; }
+    });
+    return runs;
+}
+function cellFmt(col, v){
+    if (v === null) return {t:"n/a", c:""};
+    const f = col.metric === "r" ? fmtR : fmtA;
+    if (col.kind === "pct") return {t:(v > 0 ? "+" : "") + v.toFixed(1) + "%", c:v > 0 ? "pos" : v < 0 ? "neg" : ""};
+    if (col.kind === "diff"){
+        if (Math.abs(v) < 0.005) return {t:"-", c:""};
+        return {t:(v > 0 ? "+" : "-") + f(Math.abs(v)), c:v > 0 ? "pos" : "neg"};
+    }
+    return {t:Math.abs(v) < 0.005 ? "-" : f(v), c:""};
+}
+function dvStyle(name){ const c = DIV_COLORS[name]; return c ? `background:${c[0]};color:${c[1]};font-weight:700;` : "font-weight:700;"; }
+function tableHTML(m, opt){
+    opt = opt || {};
+    const live = !opt.static, limit = opt.limit == null ? m.rows.length : opt.limit;
+    const lc = m.lc, cols = m.cols, nl = lc.length + 1;
+    const stkStyle = (i, w) => i === 0 ? `left:0;min-width:34px;max-width:34px;width:34px;` : i === 1 ? `left:34px;min-width:${w}px;max-width:${w}px;width:${w}px;` : `min-width:${w}px;`;
+    const stkCls = i => live && i < 2 ? "stk" : "";
+    let h = "<thead><tr>";
+    h += `<th rowspan="3" class="${stkCls(0)}" style="${stkStyle(0, 34)}">#</th>`;
+    lc.forEach((c, i) => { h += `<th rowspan="3" class="${stkCls(i + 1)}" style="${stkStyle(i + 1, c.w)}">${esc(c.h)}</th>`; });
+    headRuns(cols, 0).forEach(r => { h += `<th colspan="${r.span}" style="background:${r.color}">${esc(r.text)}</th>`; });
+    h += "</tr><tr>";
+    headRuns(cols, 1).forEach(r => { h += `<th colspan="${r.span}" style="background:${r.color}">${esc(r.text)}</th>`; });
+    h += "</tr><tr>";
+    headRuns(cols, 2).forEach(r => { h += `<th colspan="${r.span}" style="background:${r.color}">${esc(r.text)}</th>`; });
+    h += "</tr></thead><tbody>";
+    const n = Math.min(limit, m.rows.length);
+    for (let i = 0; i < n; i++){
+        const u = m.rows[i];
+        h += `<tr class="${m.clickable && live ? "click" : ""}" ${m.clickable && live ? `onclick="openDrill(${i})"` : ""}>`;
+        h += `<td class="${stkCls(0)}" style="${stkStyle(0, 34)}">${i + 1}</td>`;
+        lc.forEach((c, j) => {
+            const v = c.get(u, i);
+            const st = (c.dv ? dvStyle(v) : "") + (j === 0 && live ? `left:34px;` : "");
+            h += `<td class="${stkCls(j + 1)} ${c.left ? "left" : ""} ${j === 0 ? "first" : ""}" style="${st}${j === 0 ? `min-width:${c.w}px;` : ""}">${c.n ? fmtA(v) : esc(v)}</td>`;
+        });
+        cols.forEach(c => { const f = cellFmt(c, colVal(c, u)); h += `<td class="num ${f.c}">${f.t}</td>`; });
+        h += "</tr>";
+    }
+    h += "</tbody><tfoot><tr>";
+    h += `<td class="${stkCls(0)}" style="${stkStyle(0, 34)}"></td>`;
+    lc.forEach((c, j) => {
+        let t = "";
+        if (j === 0) t = "TOTAL" + (m.level === "office" ? ` (${m.rows.length})` : "");
+        else if (c.n) t = fmtA(m.total.offs.length);
+        h += `<td class="${stkCls(j + 1)} ${c.left ? "left" : ""}" style="${j === 0 && live ? "left:34px;" : ""}">${t}</td>`;
+    });
+    cols.forEach(c => { const f = cellFmt(c, colVal(c, m.total)); h += `<td class="num ${f.c}">${f.t}</td>`; });
+    h += "</tr></tfoot>";
+    return h;
+}
+function paint(key, m, resetLimit){
+    CUR[key] = m;
+    if (resetLimit || !LIM[key]) LIM[key] = 150;
+    $("ttl-" + key).textContent = m.title;
+    const wrap = $("wrap-" + key), more = $("more-" + key);
+    more.innerHTML = "";
+    if (!m.cols.length){
+        $("info-" + key).textContent = m.sub;
+        const need = key === "cmp" ? "Kam se kam 2 months, 1 vertical aur 1 metric (Article/Revenue) select karein." : "Kam se kam 1 month, 1 vertical aur 1 metric (Article/Revenue) select karein.";
+        wrap.innerHTML = `<div class="p-8 text-center text-slate-500 font-semibold">⚠️ ${need}</div>`;
+        return;
+    }
+    if (!m.rows.length){
+        $("info-" + key).textContent = m.sub;
+        wrap.innerHTML = `<div class="p-8 text-center text-slate-500 font-semibold">Is filter me koi record nahi mila.</div>`;
+        return;
+    }
+    $("info-" + key).textContent = `${m.sub}  •  ${m.rows.length} rows`;
+    wrap.innerHTML = `<table class="dt live" id="tbl-${key}">${tableHTML(m, {limit:LIM[key]})}</table>`;
+    if (m.rows.length > LIM[key]){
+        more.innerHTML = `<div class="p-2 text-center text-[11px] font-semibold text-slate-600">Showing ${LIM[key]} of ${m.rows.length} rows (Excel/PDF/JPEG me poora data jayega) &nbsp;
+            <button class="lvbtn" onclick="moreRows('${key}',200)">+200 more</button> <button class="lvbtn" onclick="moreRows('${key}',1e9)">Show all</button></div>`;
+    }
+}
+function moreRows(key, n){ LIM[key] += n; paint(key, CUR[key], false); }
+
+function refresh(tab){
+    if (tab === "sum") paint("sum", buildSumModel(ST.sum.level), true);
+    else if (tab === "off") paint("off", buildOffModel(), true);
+    else if (tab === "top"){ const t = buildTopModels(); paint("top", t.top, true); paint("bot", t.bot, true); }
+    else if (tab === "cmp") paint("cmp", buildCmpModel(), true);
+}
+
+/* ============================ TABS / CARDS / MODALS ============================ */
+function cardHTML(key){
+    return `<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="report-header px-4 py-2.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div class="min-w-0"><h2 id="ttl-${key}" class="font-bold text-sm">-</h2><p id="info-${key}" class="text-[10px] text-purple-200 break-words"></p></div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <button onclick="expX('${key}')" class="bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📥 Excel</button>
+                <button onclick="expP('${key}')" class="bg-rose-800 hover:bg-rose-900 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📄 PDF</button>
+                <button onclick="expJ('${key}')" class="bg-indigo-700 hover:bg-indigo-800 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📸 JPEG</button>
+            </div>
+        </div>
+        <div class="data-wrap" id="wrap-${key}"></div><div id="more-${key}"></div>
+        <div class="px-3 py-2 text-[11px] font-semibold text-slate-600 italic border-t border-slate-200 bg-slate-50">${NOTE}</div></div>`;
+}
+const TAB_IDS = {sum:"Sum", off:"Off", top:"Top", cmp:"Cmp"};
+function switchTab(tab){
+    activeTab = tab;
+    Object.keys(TAB_IDS).forEach(k => {
+        const on = k === tab, b = $("tabBtn" + TAB_IDS[k]), v = $("view" + TAB_IDS[k]);
+        b.className = "text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer " + (on
+            ? "bg-purple-900 text-white shadow border-b-2 border-purple-500"
+            : "bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200");
+        v.classList.toggle("hidden", !on);
+    });
+    requestAnimationFrame(() => refresh(tab));
+}
+function closeModal(id){ $(id).classList.add("hidden"); }
+function openDrill(i){
+    const src = CUR.sum; if (!src) return;
+    const u = src.rows[i]; if (!u) return;
+    const s = ST.sum, ms = mons(s), vs = verts(s), rm = s.metrics.has("r") ? "r" : "a";
+    const units = makeUnits(u.offs, "office");
+    const val = new Map(units.map(x => [x, rankVal(s, x, ms, vs, "T", rm)]));
+    units.sort((a, b) => (val.get(b) - val.get(a)) || (a.o.name || "").localeCompare(b.o.name || ""));
+    const m = mk("modal", "Offices - " + unitLabel(u, src.level), s, "office", monthCols(s), units, "Sorted: Total " + (rm === "r" ? "Revenue" : "Article") + " (High to Low)");
+    paint("modal", m, true);
+    $("drillModal").classList.remove("hidden");
+}
+
+/* ============================ EXPORTS ============================ */
+const rawCell = (col, v) => v === null ? "" : (col.kind === "pct" ? Math.round(v * 100) / 100 : (col.metric === "r" ? Math.round(v * 100) / 100 : Math.round(v)));
+function modelSheet(m){
+    const nl = m.lc.length + 1, nc = nl + m.cols.length, T = 4, aoa = [], merges = [];
+    aoa.push([PORTAL]); aoa.push([m.title]); aoa.push([m.sub]); aoa.push([]);
+    for (let d = 0; d < 3; d++) aoa.push(new Array(nc).fill(""));
+    ["#", ...m.lc.map(x => x.h)].forEach((t, c) => { aoa[T][c] = t; merges.push({s:{r:T, c}, e:{r:T + 2, c}}); });
+    for (let d = 0; d < 3; d++){
+        let c = nl;
+        headRuns(m.cols, d).forEach(run => {
+            aoa[T + d][c] = run.text;
+            if (run.span > 1) merges.push({s:{r:T + d, c}, e:{r:T + d, c:c + run.span - 1}});
+            c += run.span;
+        });
+    }
+    m.rows.forEach((u, i) => aoa.push([i + 1, ...m.lc.map(c => c.get(u, i)), ...m.cols.map(c => rawCell(c, colVal(c, u)))]));
+    aoa.push(["", ...m.lc.map((c, j) => j === 0 ? "TOTAL" : (c.n ? m.total.offs.length : "")), ...m.cols.map(c => rawCell(c, colVal(c, m.total)))]);
+    const lastData = aoa.length - 1;
+    aoa.push([]); aoa.push([NOTE]);
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws["!merges"] = merges;
+    ws["!cols"] = [{wch:5}, ...m.lc.map(c => ({wch:Math.max(10, Math.round(c.w / 7))})), ...m.cols.map(() => ({wch:14}))];
+    const first = T + 3, last = lastData;
+    for (let r = first; r <= last; r++) m.cols.forEach((c, j) => {
+        const cell = ws[XLSX.utils.encode_cell({r, c:nl + j})];
+        if (cell && typeof cell.v === "number") cell.z = c.kind === "pct" ? '0.00"%"' : (c.metric === "r" ? "#,##0.00" : "#,##0");
+    });
+    return {ws};
+}
+function fname(m){ return m.title.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, ""); }
+function need(key){ const m = CUR[key]; if (!m || !m.cols.length || !m.rows.length){ alert("Is table me export karne layak data nahi hai."); return null; } return m; }
+function expX(key){
+    const m = need(key); if (!m) return;
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, modelSheet(m).ws, "Report");
+    XLSX.writeFile(wb, fname(m) + ".xlsx");
+}
+function expP(key){
+    const m = need(key); if (!m) return;
+    const { jsPDF } = window.jspdf;
+    const wide = m.cols.length > 20;
+    const doc = new jsPDF("l", "mm", wide ? "a3" : "a4");
+    const W = doc.internal.pageSize.getWidth();
+    const nl = m.lc.length + 1;
+    const head = [0, 1, 2].map(d => {
+        const row = [];
+        if (d === 0) ["#", ...m.lc.map(x => x.h)].forEach(t => row.push({content:t, rowSpan:3, styles:{halign:"center", valign:"middle", fillColor:hex2rgb("#b8cce4")}}));
+        headRuns(m.cols, d).forEach(r => row.push({content:r.text, colSpan:r.span, styles:{halign:"center", fillColor:hex2rgb(r.color)}}));
+        return row;
+    });
+    const body = m.rows.map((u, i) => [i + 1, ...m.lc.map(c => c.n ? fmtA(c.get(u, i)) : String(c.get(u, i))), ...m.cols.map(c => cellFmt(c, colVal(c, u)).t)]);
+    const foot = [[{content:"TOTAL" + (m.level === "office" ? ` (${m.rows.length})` : ""), colSpan:nl, styles:{halign:"left"}}, ...m.cols.map(c => cellFmt(c, colVal(c, m.total)).t)]];
+    const columnStyles = {}; m.cols.forEach((c, j) => columnStyles[nl + j] = {halign:"right"});
+    const fs = m.cols.length > 40 ? 4.5 : wide ? 5.5 : 7;
+    const banner = () => {
+        doc.setFillColor(44, 12, 56); doc.rect(0, 0, W, 17, "F");
+        doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+        doc.text(PORTAL, 10, 8); doc.setFontSize(8.5); doc.text(m.title.toUpperCase(), 10, 13);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(6.5); doc.text(m.sub.slice(0, 260), 10, 16);
+    };
+    doc.autoTable({
+        head, body, foot, showFoot:"lastPage", startY:20, margin:{top:20, right:6, bottom:8, left:6}, theme:"grid",
+        styles:{fontSize:fs, cellPadding:1.2, valign:"middle", lineColor:[170,170,170], lineWidth:0.1, overflow:"linebreak"},
+        headStyles:{textColor:[0,0,0], fontStyle:"bold"},
+        footStyles:{fillColor:hex2rgb("#bdd7ee"), textColor:[0,0,0], fontStyle:"bold"},
+        columnStyles, didDrawPage:banner
+    });
+    const H = doc.internal.pageSize.getHeight();
+    let ny = doc.lastAutoTable.finalY + 5;
+    if (ny > H - 8){ doc.addPage(); ny = 12; }
+    doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "italic"); doc.setFontSize(8);
+    doc.text(NOTE, 8, ny);
+    doc.save(fname(m) + ".pdf");
+}
+function expJ(key){
+    const m = need(key); if (!m) return;
+    const MAXR = 800;
+    const host = document.createElement("div");
+    host.style.cssText = "position:fixed;left:0;top:0;z-index:-1;background:#fff;width:max-content;padding:0;pointer-events:none";
+    host.innerHTML = `<div class="report-header" style="padding:8px 12px"><div style="font-weight:800;font-size:14px">${esc(PORTAL)}</div><div style="font-size:12px;font-weight:700">${esc(m.title)}</div><div style="font-size:10px;opacity:.85">${esc(m.sub)}</div></div>
+        <table class="dt" style="min-width:0">${tableHTML(m, {static:true, limit:MAXR})}</table>` +
+        `<div style="padding:6px 12px;font-size:11px;font-weight:700;font-style:italic">${esc(NOTE)}</div>` + (m.rows.length > MAXR ? `<div style="padding:6px 12px;font-size:11px;font-weight:700">Note: JPEG me pehle ${MAXR} rows hain. Poore data ke liye Excel/PDF use karein.</div>` : "");
+    document.body.appendChild(host);
+    html2canvas(host, {scale:host.scrollWidth > 3000 ? 1 : 1.5, backgroundColor:"#ffffff", width:host.scrollWidth, height:host.scrollHeight, windowWidth:host.scrollWidth + 50}).then(canvas => {
+        const a = document.createElement("a");
+        a.download = fname(m) + ".jpg"; a.href = canvas.toDataURL("image/jpeg", 0.92); a.click();
+    }).catch(e => alert("JPEG banane me dikkat: " + e)).finally(() => host.remove());
+}
+function exportComplete(){
+    const wb = XLSX.utils.book_new();
+    const add = (m, name) => { if (m && m.cols.length && m.rows.length) XLSX.utils.book_append_sheet(wb, modelSheet(m).ws, name); };
+    add(buildSumModel("division"), "Summary_Division");
+    add(buildSumModel("sd"), "Summary_SubDivision");
+    add(buildSumModel("region"), "Summary_Region");
+    add(buildOffModel(), "Detailed_Office");
+    const t = buildTopModels(); add(t.top, "Top_N"); add(t.bot, "Bottom_N");
+    add(buildCmpModel(), "Multi_Month_Compare");
+    if (!wb.SheetNames.length){ alert("Export ke liye data / filters check karein."); return; }
+    XLSX.writeFile(wb, "Article_Revenue_Complete_Report.xlsx");
+}
+
+/* ============================ DATA CHECK ============================ */
+function openCheck(){
+    const ref = MONTHS.find(m => RAW[m.k] && STATUS[m.k] && STATUS[m.k].info && STATUS[m.k].info.labels);
+    let h = `<div><h4 class="font-bold text-sm text-purple-900 mb-1">Month-wise status</h4><div class="overflow-x-auto"><table class="dt" style="min-width:0"><thead><tr>
+        <th>Month</th><th>Status</th><th>Offices</th><th>Header Row</th><th>Data Starts</th><th>Format</th>
+        <th style="background:#c6efce">Parcel<br>Art / Rev</th><th style="background:#fff2cc">IRGB<br>Art / Rev</th><th style="background:#fce4d6">MO (+Speed Post +Other)<br>Art / Rev</th></tr></thead><tbody>`;
+    MONTHS.forEach(m => {
+        const st = STATUS[m.k] || {ok:false, msg:"Load nahi hua"};
+        if (!st.ok){ h += `<tr><td class="left">${m.n}</td><td class="left" colspan="8" style="color:#b91c1c;font-weight:700">❌ ${esc(st.msg)}</td></tr>`; return; }
+        const tot = [0,0,0,0,0,0]; OFFICE_LIST.forEach(o => { if (o.m[m.k]) for (let i = 0; i < 6; i++) tot[i] += o.m[m.k][i]; });
+        const i = st.info;
+        h += `<tr><td class="left">${m.n}</td><td style="color:#15803d;font-weight:700">✅ OK</td><td>${st.rows}</td><td>${i.hs + 1}</td><td>${i.ds + 1}</td><td>${i.format}${i.unknownCat ? ` (${i.unknownCat} unknown-category rows skipped)` : ""}</td>
+            <td class="num">${fmtA(tot[0])} / ${fmtR(tot[1])}</td><td class="num">${fmtA(tot[2])} / ${fmtR(tot[3])}</td><td class="num">${fmtA(tot[4])} / ${fmtR(tot[5])}</td></tr>`;
+    });
+    h += `</tbody></table></div><p class="text-[11px] text-slate-500 mt-1">Ye totals aapki sheet ke Grand Total se match karein — agar na karein to neeche column mapping badal kar Apply karein.</p></div>`;
+    if (ref){
+        const labels = STATUS[ref.k].info.labels, f = STATUS[ref.k].info.f || {}, M = STATUS[ref.k].info.M || {};
+        const opts = sel => `<option value="auto">(Auto)</option><option value="-1" ${sel === -1 ? "selected" : ""}>(None / ignore)</option>` + labels.map((L, c) => `<option value="${c}" ${sel === c ? "selected" : ""}>${colLetter(c)}: ${esc(L || "(blank)")}</option>`).join("");
+        const fields = [["officeId","Office ID"],["name","Office Name"],["cls","Class"],["div","Division"],["sd","Sub Division"],
+            ["pa","Parcel Article"],["pr","Parcel Revenue"],["ia","IRGB Article"],["ir","IRGB Revenue"],["ma","MO Article"],["mr","MO Revenue"],["oa","Other Article (MO me judega)"],["or","Other Revenue (MO me judega)"],["sa","Speed Post Article (MO me judega)"],["sr","Speed Post Revenue (MO me judega)"]];
+        h += `<div><h4 class="font-bold text-sm text-purple-900 mb-1">Column mapping (reference: ${ref.n} sheet) — sabhi months par lagega</h4><div class="grid grid-cols-1 md:grid-cols-3 gap-2">`;
+        fields.forEach(([k, nm]) => {
+            const cur = OVERRIDE[k] !== undefined ? OVERRIDE[k] : (f[k] !== undefined ? f[k] : (M[k] && M[k].length ? M[k][0] : null));
+            const det = (M[k] && M[k].length > 1) ? ` [${M[k].map(colLetter).join("+")}]` : "";
+            h += `<div><div class="lbl">${nm}${det}</div><select class="ctrl-select" data-map="${k}">${opts(OVERRIDE[k] !== undefined ? OVERRIDE[k] : cur)}</select></div>`;
+        });
+        h += `</div><div class="mt-2 flex gap-2"><button class="lvbtn on" onclick="applyMapping()">✔ Apply Mapping</button><button class="lvbtn" onclick="resetMapping()">↺ Auto-detect</button></div></div>`;
+    }
+    $("checkBody").innerHTML = h;
+    $("checkModal").classList.remove("hidden");
+}
+function applyMapping(){
+    OVERRIDE = {};
+    document.querySelectorAll("[data-map]").forEach(sel => { if (sel.value !== "auto") OVERRIDE[sel.dataset.map] = +sel.value; });
+    reloadFromRaw(); openCheck();
+}
+function resetMapping(){ OVERRIDE = {}; reloadFromRaw(); openCheck(); }
+function reloadFromRaw(){
+    buildOffices(); setDefaultMonths(); initUI();
+}
+
+/* ============================ INIT ============================ */
+function initUI(){
+    ["sum","off","top","cmp"].forEach(buildPanel);
+    refresh(activeTab);
+}
+async function initApp(){
+    document.querySelectorAll("[data-card]").forEach(el => { el.innerHTML = cardHTML(el.dataset.card); });
+    switchTab("sum");
+    const live = $("liveStatus");
+    try {
+        await loadAll();
+        setDefaultMonths();
+        initUI();
+        const okCount = MONTHS.filter(m => HAS[m.k]).length;
+        const bad = MONTHS.filter(m => !HAS[m.k]);
+        if (okCount === MONTHS.length) live.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Live Connected (${okCount} months)`;
+        else {
+            live.className = "bg-amber-600 text-white text-[11px] px-3 py-1 rounded-full font-bold shadow";
+            live.textContent = `⚠️ ${okCount}/${MONTHS.length} months loaded`;
+        }
+        if (bad.length && Object.keys(RAW).length){ $("btnCheck").classList.add("ring-2", "ring-amber-400"); setTimeout(openCheck, 400); }
+    } catch (err){
+        console.error(err);
+        live.className = "bg-rose-600 text-white text-[11px] px-3 py-1 rounded-full font-bold shadow";
+        live.textContent = "⚠️ Sync Error";
+    } finally {
+        const loader = $("initialLoader");
+        loader.style.opacity = "0"; setTimeout(() => loader.classList.add("hidden"), 300);
+    }
+}
+initApp();
+</script>
+</body>
+</html>
